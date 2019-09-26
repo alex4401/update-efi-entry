@@ -1,0 +1,16 @@
+#!/bin/bash
+# Quiet/Splashed Boot
+append	quiet
+#append	splash
+
+# Modesetting (Intel & NVIDIA)
+#append	"nvidia-drm.modeset=1"
+#append	"i915.fastboot=1"
+
+# Quiet Log Level
+#append	"loglevel=3"
+#append	"rd.udev.log-priority=3"
+#append	"systemd.show_status=auto"
+
+# Disable cursor blinking during boot
+#append	"vt.global_cursor_default=0"

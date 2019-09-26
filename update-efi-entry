@@ -1,0 +1,76 @@
+#!/bin/bash
+red=`tput setaf 1`
+green=`tput setaf 2`
+cyan=`tput setaf 6`
+reset=`tput sgr0`
+indent() {
+    echo -en "    "
+}
+print() {
+    echo $@$reset
+}
+step() {
+    print "$green$@"
+}
+info() {
+    print "$cyan$@"
+}
+error() {
+    print "$red$@"
+}
+
+_run_hooks() {
+    for hook in hooks/*
+    do
+        indent
+        info "Executing:$reset $hook"
+        source $hook
+        if [ "$?" != "0" ]
+        then
+            print "Aborting script execution (one of the hooks failed)."
+            exit 1
+        fi
+    done
+}
+
+_create() {
+    step "Loading the configuration file"
+    source ./config/efi-entry
+
+    step "Running hooks"
+    _run_hooks
+
+    step "Summary"
+    indent
+    info "Final cmdline:$reset $KERNEL_PARAMETERS"
+}
+
+_simulate() {
+    step "Loading the configuration file"
+    source ./config/efi-entry
+
+    step "Running hooks"
+    _run_hooks
+
+    step "Summary"
+    indent
+    info "Final cmdline:$reset $KERNEL_PARAMETERS"
+}
+
+_help() {
+    indent && step "create:$reset creates an EFI entry"
+    indent && step "simulate:$reset generates a list of kernel parameters without modifying NVRAM"
+}
+
+info "update-efi-entry"
+case "$1" in
+    "create")
+        #_create
+        ;;
+    "simulate")
+        _simulate
+        ;;
+    *)
+        _help
+        ;; 
+esac

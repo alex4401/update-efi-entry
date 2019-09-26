@@ -1,0 +1,28 @@
+#!/bin/bash
+# Boot Entry Details
+BOOT_ENTRY_LABEL="Arch Linux"
+
+# ESP Partition Details
+# Provide either $ESP_DISK AND $ESP_PARTITION_ID or $ESP_MOUNT_POINT.
+# If both are provided, $ESP_MOUNT_POINT will be ignored.
+ESP_DISK=""
+ESP_PARTITION_ID=""
+ESP_MOUNT_POINT="/efi"
+
+# Kernel
+KERNEL_PATH="/vmlinuz-linux"
+# Override kernel parameters.
+# If left empty, it will get generated with settings below and your
+# /etc/kernel-parameters file.
+KERNEL_PARAMETERS=""
+
+# Either set to "auto" to have your CPU manufacturer determined,
+# specify manually. Set to "none" to skip microcode loading.
+MICROCODE=auto
+
+# Root partition
+ROOT_PARTITION_UUID=""
+ROOT_PARTITION_WRITABLE=yes
+
+# Init Ramdisk
+INITRD_FILENAME="initramfs-linux.img"

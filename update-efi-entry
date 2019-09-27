@@ -55,7 +55,7 @@ _display_summary() {
 
 _create() {
     step "Loading the configuration file"
-    source $CONFIG_DIR/efi-entry
+    source $CONFIG_DIR/entry
 
     step "Running hooks"
     _run_hooks
@@ -85,7 +85,7 @@ _create() {
 
 _simulate() {
     step "Loading the configuration file"
-    source $CONFIG_DIR/efi-entry
+    source $CONFIG_DIR/entry
 
     step "Running hooks"
     _run_hooks

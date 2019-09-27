@@ -1,5 +1,5 @@
 pkgname=update-efi-entry
-pkgver=r5.8b002e7
+pkgver=r8.fd81e89
 pkgrel=1
 pkgdesc="Script for easy EFISTUB entry setup and management."
 arch=('any')
@@ -23,7 +23,7 @@ pkgver() {
 build() {
     cd "$srcdir/$pkgname"
     sed -i 's/CONFIG_DIR=.\/config/CONFIG_DIR=\/etc\/boot-entry/g' update-efi-entry
-    sed -i 's/HOOKS_DIR=.\/config/HOOKS_DIR=\/usr\/lib\/update-efi-entry\/hooks/g' update-efi-entry
+    sed -i 's/HOOKS_DIR=.\/hooks/HOOKS_DIR=\/usr\/lib\/update-efi-entry\/hooks/g' update-efi-entry
 }
 
 package() {

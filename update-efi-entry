@@ -1,4 +1,6 @@
 #!/bin/bash
+CONFIG_DIR=./config/
+
 red=`tput setaf 1`
 green=`tput setaf 2`
 cyan=`tput setaf 6`
@@ -52,7 +54,7 @@ _display_summary() {
 
 _create() {
     step "Loading the configuration file"
-    source ./config/efi-entry
+    source $CONFIG_DIR/efi-entry
 
     step "Running hooks"
     _run_hooks
@@ -82,7 +84,7 @@ _create() {
 
 _simulate() {
     step "Loading the configuration file"
-    source ./config/efi-entry
+    source $CONFIG_DIR/efi-entry
 
     step "Running hooks"
     _run_hooks

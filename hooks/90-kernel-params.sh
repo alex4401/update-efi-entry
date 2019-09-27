@@ -30,4 +30,4 @@ KERNEL_PARAMETERS="$KERNEL_PARAMETERS initrd=\\\\$INITRD_FILENAME"
 append() {
 	KERNEL_PARAMETERS="$KERNEL_PARAMETERS $@"
 }
-source ./config/kernel-parameters
+source $CONFIG_DIR/kernel-parameters

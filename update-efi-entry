@@ -1,5 +1,6 @@
 #!/bin/bash
-CONFIG_DIR=./config/
+CONFIG_DIR=./config
+HOOKS_DIR=./hooks
 
 red=`tput setaf 1`
 green=`tput setaf 2`
@@ -32,7 +33,7 @@ get_confirmation() {
 }
 
 _run_hooks() {
-    for hook in hooks/*
+    for hook in $HOOKS_DIR/*
     do
         indent
         info "Executing:$reset $hook"

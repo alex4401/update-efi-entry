@@ -14,4 +14,4 @@ then
     return 0
 fi
 
-ROOT_PARTITION_UUID=`findmnt -fn -o UUID /`
+ROOT_PARTITION_UUID=`findmnt -fn -o PARTUUID /`

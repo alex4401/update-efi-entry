@@ -18,6 +18,16 @@ info() {
 error() {
     print "$red$@"
 }
+get_confirmation() {
+    print -n $cyan"Do you want to continue?$reset [y/N] "
+    read CONFIRM
+
+    if [ "$CONFIRM" == "y" ]
+    then
+        return 1
+    fi
+    return 0
+}
 
 _run_hooks() {
     for hook in hooks/*
@@ -33,6 +43,13 @@ _run_hooks() {
     done
 }
 
+_display_summary() {
+    step "Summary"
+    indent && info "Label:$reset $BOOT_ENTRY_LABEL"
+    indent && info "Kernel:$reset $KERNEL_PATH"
+    indent && info "Final cmdline:$reset $KERNEL_PARAMETERS"
+}
+
 _create() {
     step "Loading the configuration file"
     source ./config/efi-entry
@@ -40,9 +57,27 @@ _create() {
     step "Running hooks"
     _run_hooks
 
-    step "Summary"
-    indent
-    info "Final cmdline:$reset $KERNEL_PARAMETERS"
+    _display_summary
+    indent && get_confirmation "Do you want to add this entry?"
+    if [ $? == 0 ]
+    then
+        error "Canceled by the user."
+        return 0
+    fi
+
+    info "Adding the entry using efibootmgr"
+    EFIBOOTMGR="efibootmgr"
+    if [ "`whoami`" != "root" ]
+    then
+        EFIBOOTMGR="sudo efibootmgr"
+    fi
+    $EFIBOOTMGR \
+	    --disk $ESP_DISK --part $ESP_PARTITION_ID \
+	    --create \
+	        --label "$BOOT_ENTRY_LABEL" \
+	        --loader $KERNEL_PATH \
+	        --unicode "$KERNEL_PARAMETERS" \
+	    --verbose
 }
 
 _simulate() {
@@ -52,25 +87,31 @@ _simulate() {
     step "Running hooks"
     _run_hooks
 
-    step "Summary"
-    indent
-    info "Final cmdline:$reset $KERNEL_PARAMETERS"
+    _display_summary
 }
 
 _help() {
+    indent && step "help:$reset self-explanatory"
     indent && step "create:$reset creates an EFI entry"
     indent && step "simulate:$reset generates a list of kernel parameters without modifying NVRAM"
 }
 
 info "update-efi-entry"
 case "$1" in
+    "help")
+        _help
+        ;;
     "create")
-        #_create
+        _create
         ;;
     "simulate")
         _simulate
         ;;
+    "")
+        _help
+        ;;
     *)
+        error "Unrecognized action: $1"
         _help
         ;; 
 esac

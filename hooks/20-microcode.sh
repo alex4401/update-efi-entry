@@ -23,6 +23,7 @@ fi
 MICROCODE_PATH="/boot/$MICROCODE-ucode.img"
 if [ ! -f "$MICROCODE_PATH" ]
 then
-    error "Detected \"$MICROCODE_PATH\" but it does not exist."
-    return 1
+    error "Detected that the \"$MICROCODE_PATH\" is preferred for this hardware, but it is not installed."
+    MICROCODE=none
+    return 0
 fi

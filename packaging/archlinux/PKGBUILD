@@ -1,5 +1,5 @@
 pkgname=update-efi-entry
-pkgver=r10.9ffa54d
+pkgver=r12.0653115
 pkgrel=1
 pkgdesc="Script for easy EFISTUB entry setup and management."
 arch=('any')

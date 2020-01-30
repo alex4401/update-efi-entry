@@ -20,9 +20,11 @@ KERNEL_PARAMETERS=""
 # specify manually. Set to "none" to skip microcode loading.
 MICROCODE=auto
 
-# Root partition
-ROOT_PARTITION_UUID=""
-ROOT_PARTITION_WRITABLE=yes
+# System root
+# Set to auto if you want the script to find PARTUUID of your current
+# root (/).
+SYSTEM_ROOT=auto
+WRITABLE_ROOT=yes
 
 # Init Ramdisk
 INITRD_FILENAME="initramfs-linux.img"

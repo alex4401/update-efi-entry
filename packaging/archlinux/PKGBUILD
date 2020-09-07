@@ -1,6 +1,6 @@
 # Maintainer: alex4401 <rylatgl@gmail.com>
 pkgname=update-efi-entry
-pkgver=r13.23a6ce3
+pkgver=r15.94d5a80
 pkgrel=1
 pkgdesc="Script for easy EFISTUB entry setup and management."
 arch=('any')

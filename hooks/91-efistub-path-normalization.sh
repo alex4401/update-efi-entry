@@ -1,10 +1,9 @@
 #!/bin/bash
 
-# Initialization ramdisks
 if [ "$BUILD_IMAGE" != "yes" ]
 then
     return 0
 fi
 
-# Main
+KERNEL_PATH="$ESP_MOUNT_POINT/$KERNEL_PATH"
 INITRD_FILENAME="$ESP_MOUNT_POINT/$INITRD_FILENAME"

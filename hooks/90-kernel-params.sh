@@ -18,13 +18,17 @@ else
 	KERNEL_PARAMETERS="$KERNEL_PARAMETERS ro"
 fi
 
-# Microcode
-if [ "$MICROCODE" != "none" ]; then
-	KERNEL_PARAMETERS="$KERNEL_PARAMETERS initrd=\\\\$MICROCODE-ucode.img"
-fi
+# Initialization ramdisks
+if [ "$BUILD_IMAGE" != "yes" ]
+then
+    # Microcode
+    if [ "$MICROCODE" != "none" ]; then
+	    KERNEL_PARAMETERS="$KERNEL_PARAMETERS initrd=\\\\$MICROCODE-ucode.img"
+    fi
 
-# InitRD
-KERNEL_PARAMETERS="$KERNEL_PARAMETERS initrd=\\\\$INITRD_FILENAME"
+    # Main
+    KERNEL_PARAMETERS="$KERNEL_PARAMETERS initrd=\\\\$INITRD_FILENAME"
+fi
 
 # Custom user kernel parameters
 append() {

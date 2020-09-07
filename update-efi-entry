@@ -68,19 +68,39 @@ _create() {
         return 0
     fi
 
-    info "Adding the entry using efibootmgr"
-    EFIBOOTMGR="efibootmgr"
-    if [ "`whoami`" != "root" ]
+    if [ "$BUILD_IMAGE" == "yes" ]
     then
-        EFIBOOTMGR="sudo efibootmgr"
+    
+        info "Creating a combined EFI binary"        
+        objcopy \
+            --add-section .osrel="/etc/os-release"                          \
+                --change-section-vma .osrel=0x20000                         \
+            --add-section .cmdline=<(echo -n "${KERNEL_PARAMETERS}")        \
+                --change-section-vma .cmdline=0x30000                       \
+            --add-section .linux="$KERNEL_PATH"                             \
+                --change-section-vma .linux=0x2000000                       \
+            --add-section .initrd=<(cat "${MICROCODE_PATH}" "${INITRD_FILENAME}") \
+                --change-section-vma .initrd=0x3000000                      \
+            "${EFISTUB_LOCATION}" "${EFI_IMAGE_OUTPUT}"
+        
+    else
+    
+        info "Adding the entry using efibootmgr"
+        EFIBOOTMGR="efibootmgr"
+        if [ "`whoami`" != "root" ]
+        then
+            EFIBOOTMGR="sudo efibootmgr"
+        fi
+        
+        $EFIBOOTMGR \
+	        --disk $ESP_DISK --part $ESP_PARTITION_ID \
+	        --create \
+	            --label "$BOOT_ENTRY_LABEL" \
+	            --loader $KERNEL_PATH \
+	            --unicode "$KERNEL_PARAMETERS" \
+    	    --verbose
+    	    
     fi
-    $EFIBOOTMGR \
-	    --disk $ESP_DISK --part $ESP_PARTITION_ID \
-	    --create \
-	        --label "$BOOT_ENTRY_LABEL" \
-	        --loader $KERNEL_PATH \
-	        --unicode "$KERNEL_PARAMETERS" \
-	    --verbose
 }
 
 _simulate() {

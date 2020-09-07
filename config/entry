@@ -9,6 +9,11 @@ ESP_DISK=""
 ESP_PARTITION_ID=""
 ESP_MOUNT_POINT="/efi"
 
+# Binary generation
+BUILD_IMAGE=no
+EFISTUB_LOCATION=auto
+EFI_IMAGE_OUTPUT="$ESP_MOUNT_POINT/EFI/Linux/kernel.efi"
+
 # Kernel
 KERNEL_PATH="/vmlinuz-linux"
 # Override kernel parameters.

@@ -58,7 +58,8 @@ _efibootmgr_envsetup() {
     EFIBOOTMGR_CMDLINE+="--label \"$BOOT_ENTRY_LABEL\" "
     EFIBOOTMGR_CMDLINE+="--loader $KERNEL_PATH "
     EFIBOOTMGR_CMDLINE+="--unicode \"$KERNEL_PARAMETERS\" "
-    EFIBOOTMGR_CMDLINE+="--verbose"
+    EFIBOOTMGR_CMDLINE+="--verbose "
+    EFIBOOTMGR_CMDLINE+="$CUSTOM_EFIBOOTMGR_CMDLINE"
 }
 
 _display_summary() {

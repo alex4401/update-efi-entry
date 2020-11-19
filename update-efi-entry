@@ -10,7 +10,7 @@ indent() {
     echo -en "    "
 }
 print() {
-    echo $@$reset
+    echo -e $@$reset
 }
 step() {
     print "$green$@"
@@ -46,11 +46,27 @@ _run_hooks() {
     done
 }
 
+_efibootmgr_envsetup() {
+    EFIBOOTMGR="efibootmgr"
+    if [ "`whoami`" != "root" ]
+    then
+        EFIBOOTMGR="sudo efibootmgr"
+    fi
+        
+    EFIBOOTMGR_CMDLINE="--disk $ESP_DISK --part $ESP_PARTITION_ID "
+    EFIBOOTMGR_CMDLINE+="--create "
+    EFIBOOTMGR_CMDLINE+="--label \"$BOOT_ENTRY_LABEL\" "
+    EFIBOOTMGR_CMDLINE+="--loader $KERNEL_PATH "
+    EFIBOOTMGR_CMDLINE+="--unicode \"$KERNEL_PARAMETERS\" "
+    EFIBOOTMGR_CMDLINE+="--verbose"
+}
+
 _display_summary() {
     step "Summary"
-    indent && info "Label:$reset $BOOT_ENTRY_LABEL"
-    indent && info "Kernel:$reset $KERNEL_PATH"
-    indent && info "Final cmdline:$reset $KERNEL_PARAMETERS"
+    indent && info "Label:$reset\t\t $BOOT_ENTRY_LABEL"
+    indent && info "Kernel:$reset\t\t $KERNEL_PATH"
+    indent && info "Kernel args:$reset\t $KERNEL_PARAMETERS"
+    indent && info "efibootmgr args:$reset\t $EFIBOOTMGR_CMDLINE"
 }
 
 _create() {
@@ -59,6 +75,7 @@ _create() {
 
     step "Running hooks"
     _run_hooks
+    _efibootmgr_envsetup
 
     _display_summary
     indent && get_confirmation "Do you want to add this entry?"
@@ -86,20 +103,8 @@ _create() {
     else
     
         info "Adding the entry using efibootmgr"
-        EFIBOOTMGR="efibootmgr"
-        if [ "`whoami`" != "root" ]
-        then
-            EFIBOOTMGR="sudo efibootmgr"
-        fi
+        $EFIBOOTMGR $EFIBOOTMGR_CMDLINE
         
-        $EFIBOOTMGR \
-	        --disk $ESP_DISK --part $ESP_PARTITION_ID \
-	        --create \
-	            --label "$BOOT_ENTRY_LABEL" \
-	            --loader $KERNEL_PATH \
-	            --unicode "$KERNEL_PARAMETERS" \
-    	    --verbose
-    	    
     fi
 }
 
@@ -109,6 +114,8 @@ _simulate() {
 
     step "Running hooks"
     _run_hooks
+    
+    _efibootmgr_envsetup
 
     _display_summary
 }

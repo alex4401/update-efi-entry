@@ -1,7 +1,7 @@
 # Template file for 'update-efi-entry'
 pkgname=update-efi-entry
 version=0.8.2
-revision=1
+revision=2
 short_desc="Simple EFISTUB entry setup and management script."
 archs=x86_64
 hostmakedepends="git sed"
@@ -33,6 +33,6 @@ do_install() {
 	vcopy "hooks/*" "usr/lib/update-efi-entry/hooks"
 	chmod 644 "${DESTDIR}/usr/lib/update-efi-entry/hooks/"*
 	
-	vinstall "${wrksrc}/config/entry" 644 "etc/boot/entry"
-	vinstall "${wrksrc}/config/kernel-parameters" 644 "etc/boot/kernel-parameters"
+	vinstall "${wrksrc}/config/entry" 644 "etc/boot"
+	vinstall "${wrksrc}/config/kernel-parameters" 644 "etc/boot"
 }

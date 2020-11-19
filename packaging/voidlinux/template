@@ -1,0 +1,38 @@
+# Template file for 'update-efi-entry'
+pkgname=update-efi-entry
+version=0.8.2
+revision=1
+short_desc="Simple EFISTUB entry setup and management script."
+archs=x86_64
+hostmakedepends="git sed"
+depends="bash efibootmgr ncurses util-linux"
+maintainer="alex <rylatgl@gmail.com>"
+license="GPL-3.0"
+homepage="https://github.com/alex4401/update-efi-entry"
+
+
+do_fetch() {
+	mkdir -p "${wrksrc}"
+
+	git clone https://github.com/alex4401/update-efi-entry.git "${wrksrc}"
+	cd "${wrksrc}"
+	git reset --hard $version
+}
+
+do_build() {
+	vsed -i "${wrksrc}/update-efi-entry" -e 's/CONFIG_DIR=.\/config/CONFIG_DIR=\/etc\/boot/g'
+	vsed -i "${wrksrc}/update-efi-entry" -e 's/HOOKS_DIR=.\/hooks/HOOKS_DIR=\/usr\/lib\/update-efi-entry\/hooks/g'
+}
+
+do_install() {
+	vbin update-efi-entry
+	
+	vmkdir etc/boot 755
+	vmkdir usr/lib/update-efi-entry/hooks 755
+	
+	vcopy "hooks/*" "usr/lib/update-efi-entry/hooks"
+	chmod 644 "${DESTDIR}/usr/lib/update-efi-entry/hooks/"*
+	
+	vinstall "${wrksrc}/config/entry" 644 "etc/boot/entry"
+	vinstall "${wrksrc}/config/kernel-parameters" 644 "etc/boot/kernel-parameters"
+}

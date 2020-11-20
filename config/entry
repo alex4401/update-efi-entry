@@ -33,3 +33,11 @@ WRITABLE_ROOT=yes
 
 # Init Ramdisk
 INITRD_FILENAME="initramfs-linux.img"
+
+# Enable this if your motherboard's firmware implementation
+# "breaks" the entry by switching the ESP pointer to a Ven(dor)
+# H(ard)w(are).
+# Switching this to a positive value will prevent the script from
+# explicitly specifying an ESP device, and hopefully the firmware
+# will do it on its own.
+WA_VENHW_TRUST_FIRMWARE_WITH_ESP=no

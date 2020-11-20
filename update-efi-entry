@@ -48,13 +48,23 @@ _run_hooks() {
 
 _efibootmgr_envsetup() {
     EFIBOOTMGR="efibootmgr"
+    EFIBOOTMGR_CMDLINE=()
     if [ "`whoami`" != "root" ]
     then
         EFIBOOTMGR="sudo efibootmgr"
     fi
     
-    EFIBOOTMGR_CMDLINE=(
-        --disk "$ESP_DISK" --part "$ESP_PARTITION_ID"
+    # Set the ESP device explicitly if workaround is disabled.
+    if [ "$WA_VENHW_TRUST_FIRMWARE_WITH_ESP" != "yes" ]
+    then
+        EFIBOOTMGR_CMDLINE+=(
+        	--disk "$ESP_DISK"
+        	--part "$ESP_PARTITION_ID"
+        )
+    fi
+    
+    # 
+    EFIBOOTMGR_CMDLINE+=(
         --create
             --label "${BOOT_ENTRY_LABEL}"
             --loader "$KERNEL_PATH"

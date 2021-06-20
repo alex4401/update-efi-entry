@@ -9,13 +9,18 @@ then
     return 0
 fi
 
+# Helper function to append a kernel parameter
+append() {
+    KERNEL_PARAMETERS="$KERNEL_PARAMETERS $@"
+}
+
 # Root
 KERNEL_PARAMETERS="root=$SYSTEM_ROOT"
 if [ "$WRITABLE_ROOT" == "yes" ]
 then
-	KERNEL_PARAMETERS="$KERNEL_PARAMETERS rw"
+    append "rw"
 else
-	KERNEL_PARAMETERS="$KERNEL_PARAMETERS ro"
+    append "ro"
 fi
 
 # Initialization ramdisks
@@ -23,15 +28,25 @@ if [ "$BUILD_IMAGE" != "yes" ]
 then
     # Microcode
     if [ "$MICROCODE" != "none" ]; then
-	    KERNEL_PARAMETERS="$KERNEL_PARAMETERS initrd=\\\\$MICROCODE-ucode.img"
+        append "initrd=\\\\$MICROCODE-ucode.img"
     fi
 
     # Main
-    KERNEL_PARAMETERS="$KERNEL_PARAMETERS initrd=\\\\$INITRD_FILENAME"
+    append "initrd=\\\\$INITRD_FILENAME"
 fi
 
-# Custom user kernel parameters
-append() {
-	KERNEL_PARAMETERS="$KERNEL_PARAMETERS $@"
-}
-source $CONFIG_DIR/kernel-parameters
+# Use kernel-parameters if enabled by user.
+KERNEL_PARAMS_CONFIG="$CONFIG_DIR/kernel-parameters"
+if [[ `cat "$KERNEL_PARAMS_CONFIG" | grep -o "\!\[use\]"` != "![use]" ]]
+then
+    indent && print "Using separate kernel parameters configuration"
+    source "$KERNEL_PARAMS_CONFIG"
+fi
+unset KERNEL_PARAMS_CONFIG
+
+# Run advanced configuration hook.
+if [ `LC_ALL=C type -t late_advanced_boot_config` == "function" ]
+then
+    indent && print "Using advanced boot entry configuration"
+    late_advanced_boot_config
+fi

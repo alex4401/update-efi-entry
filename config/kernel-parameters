@@ -1,6 +1,19 @@
-#!/bin/bash
-# Quiet/Splashed Boot
+## 
+## This configuration file allows you to append kernel parameters for
+## a generated EFI boot entry.
+## 
+## Beginning with version 0.9.0, it is preferred that you apply custom
+## settings in the 'late_advanced_boot_config' section of your main
+## configuration file.
+## 
+## This file is no longer used by default by the script. If you, however,
+## wish to enable it, remove the exclamation mark from the next line:
+## ![use]
+
+# Quiet boot
 append	quiet
+
+# Plymouth splash screen
 #append	splash
 
 # Modesetting (Intel & NVIDIA)

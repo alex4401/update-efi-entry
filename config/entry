@@ -41,3 +41,12 @@ INITRD_FILENAME="initramfs-linux.img"
 # explicitly specifying an ESP device, and hopefully the firmware
 # will do it on its own.
 WA_VENHW_TRUST_FIRMWARE_WITH_ESP=no
+
+# This section allows you to append kernel parameters for the
+# generated EFI boot entry.
+late_advanced_boot_config() {
+
+    # Quiet boot
+    append "quiet"
+
+}

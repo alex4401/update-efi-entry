@@ -1,6 +1,6 @@
 # Maintainer: alex4401 <rylatgl@gmail.com>
 pkgname=update-efi-entry
-pkgver=r15.94d5a80
+pkgver=r26.db0ed79
 pkgrel=1
 pkgdesc="Simple EFISTUB entry setup and management script."
 arch=('any')
@@ -10,6 +10,7 @@ makedepends=('git' 'sed')
 source=(
     "git+https://github.com/alex4401/update-efi-entry.git"
 )
+backup=('etc/boot/entry' 'etc/boot/kernel-parameters')
 sha256sums=('SKIP')
 url="https://github.com/alex4401/update-efi-entry"
 

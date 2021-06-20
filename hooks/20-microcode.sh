@@ -20,10 +20,11 @@ else
     return 0
 fi
 
-MICROCODE_PATH="/boot/$MICROCODE-ucode.img"
-if [ ! -f "$MICROCODE_PATH" ]
+MICROCODE_FILENAME="$MICROCODE-ucode.img"
+check_file_espnboot_u "$MICROCODE_FILENAME"
+if [ ! -f "$ESP_MOUNT_POINT/$MICROCODE_FILENAME" ]
 then
-    error "Detected that the \"$MICROCODE_PATH\" is preferred for this hardware, but it is not installed."
+    error "Detected that the \"$MICROCODE_FILENAME\" is preferred for this hardware, but it is not installed."
     MICROCODE=none
     return 0
 fi

@@ -32,17 +32,21 @@ get_confirmation() {
     return 0
 }
 
+_invoke_hook() {
+    indent
+    info "Executing:$reset $1"
+    source "$1"
+    if [ "$?" != "0" ]
+    then
+        error "Aborting script execution (one of the hooks failed)."
+        exit 1
+    fi
+}
+
 _run_hooks() {
     for hook in $HOOKS_DIR/*
     do
-        indent
-        info "Executing:$reset $hook"
-        source $hook
-        if [ "$?" != "0" ]
-        then
-            print "Aborting script execution (one of the hooks failed)."
-            exit 1
-        fi
+        _invoke_hook $hook
     done
 }
 
